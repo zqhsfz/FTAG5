@@ -1,0 +1,21 @@
+--- PhysicsAnalysis/DerivationFramework/DerivationFrameworkCore/python/DerivationFrameworkProdFlags.py	2016-04-28 16:32:05.000000001 +0200
++++ PhysicsAnalysis/DerivationFramework/DerivationFrameworkCore/python/DerivationFrameworkProdFlagsNW.py	2016-04-28 16:33:10.000000001 +0200
+@@ -1668,5 +1668,18 @@
+ jobproperties.DerivationFrameworkProdFlags.add_JobProperty(WriteDAOD_HION9Stream)
+ listAODtoDPD.append(WriteDAOD_HION9Stream.StreamName)
+ 
++class WriteDAOD_FTAG5Stream (JobProperty):
++     """FTAG5 derivation"""
++     statusOn = True
++     allowedTypes = ['bool']
++     StoredValue = False
++     StreamName = 'StreamDAOD_FTAG5'
++     FileName = ''
++     isVirtual = False
++     DPDMakerScript = "DerivationFrameworkFlavourTag/FTAG5.py"
++     pass
++jobproperties.DerivationFrameworkProdFlags.add_JobProperty(WriteDAOD_FTAG5Stream)
++listAODtoDPD.append(WriteDAOD_FTAG5Stream.StreamName)
++
+ from RecExConfig.RecoFunctions import AddValidItemToList
+ AddValidItemToList(listAODtoDPD,listAllKnownDPD)
