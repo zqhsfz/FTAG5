@@ -1,7 +1,7 @@
-#ignore everything in this directory by default
-/*
+# ignore directories under this one by default
+/*/
+# ATLAS SW sometimes addes hidden things, ignore them as well
+.*
 
 #include a few local files
 !/scripts/
-!.gitignore
-!setup.sh
