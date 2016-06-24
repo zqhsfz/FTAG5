@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
 PREFIX="group.phys-exotics"
 SUFFIX="VRT10"

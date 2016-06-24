@@ -1,0 +1,7 @@
+#ignore everything in this directory by default
+/*
+
+#include a few local files
+!/scripts/
+!.gitignore
+!setup.sh
