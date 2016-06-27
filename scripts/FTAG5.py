@@ -73,7 +73,7 @@ FlavorTagInit(JetCollections = ["AntiKt4PV0TrackJets", "AntiKtVR50Rmax4Rmin0Trac
 # SKIMMING TOOLS
 #====================================================================
 # this is a basic cut for Higgs tagging studies
-offlineExpression = '((count (AntiKt10LCTopoTrimmedPtFrac5SmallR20Jets.m > 50 * GeV && AntiKt10LCTopoTrimmedPtFrac5SmallR20Jets.pt > 250 * GeV && (abs(AntiKt10LCTopoTrimmedPtFrac5SmallR20Jets.eta) < 2.0)) > 0 ))'
+offlineExpression = '((count (AntiKt10LCTopoTrimmedPtFrac5SmallR20Jets.pt > 250 * GeV && (abs(AntiKt10LCTopoTrimmedPtFrac5SmallR20Jets.eta) < 2.0)) > 0 ))'
 
 if globalflags.DataSource()=='data':
     triggers=[
