@@ -5,3 +5,7 @@
 
 #include a few local files
 !/scripts/
+!.gitignore
+
+# ignore specific files
+commit.txt
