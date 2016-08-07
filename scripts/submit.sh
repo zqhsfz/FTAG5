@@ -1,63 +1,30 @@
 #!/usr/bin/env bash
 
-PREFIX="group.phys-exotics"
-SUFFIX="VRT10"
+if ! git diff-index --quiet HEAD; then
+    echo "ERROR: uncommitted changes in local area, please commit them" >&2
+    exit 1
+fi
 
-declare -a INPUTFILEARRAY
-
-INPUTFILEARRAY[0]=mc15_13TeV.301508.MadGraphPythia8EvtGen_A14NNPDF23LO_RS_G_hh_bbbb_c20_M300.merge.AOD.e3820_s2608_s2183_r7772_r7676
-INPUTFILEARRAY[1]=mc15_13TeV.301508.MadGraphPythia8EvtGen_A14NNPDF23LO_RS_G_hh_bbbb_c20_M300.merge.AOD.e3820_s2608_s2183_r7772_r7676
-INPUTFILEARRAY[2]=mc15_13TeV.301509.MadGraphPythia8EvtGen_A14NNPDF23LO_RS_G_hh_bbbb_c20_M400.merge.AOD.e3820_s2608_s2183_r7772_r7676
-INPUTFILEARRAY[3]=mc15_13TeV.301513.MadGraphPythia8EvtGen_A14NNPDF23LO_RS_G_hh_bbbb_c20_M800.merge.AOD.e3820_s2608_s2183_r7772_r7676
-INPUTFILEARRAY[4]=mc15_13TeV.301515.MadGraphPythia8EvtGen_A14NNPDF23LO_RS_G_hh_bbbb_c20_M1000.merge.AOD.e3820_s2608_s2183_r7772_r7676
-INPUTFILEARRAY[5]=mc15_13TeV.301517.MadGraphPythia8EvtGen_A14NNPDF23LO_RS_G_hh_bbbb_c20_M1200.merge.AOD.e3820_s2608_s2183_r7772_r7676
-INPUTFILEARRAY[6]=mc15_13TeV.301518.MadGraphPythia8EvtGen_A14NNPDF23LO_RS_G_hh_bbbb_c20_M1300.merge.AOD.e3820_s2608_s2183_r7772_r7676
-INPUTFILEARRAY[7]=mc15_13TeV.301520.MadGraphPythia8EvtGen_A14NNPDF23LO_RS_G_hh_bbbb_c20_M1500.merge.AOD.e3820_s2608_s2183_r7772_r7676
-INPUTFILEARRAY[8]=mc15_13TeV.301521.MadGraphPythia8EvtGen_A14NNPDF23LO_RS_G_hh_bbbb_c20_M1600.merge.AOD.e3820_s2608_s2183_r7772_r7676
-INPUTFILEARRAY[9]=mc15_13TeV.301523.MadGraphPythia8EvtGen_A14NNPDF23LO_RS_G_hh_bbbb_c20_M2000.merge.AOD.e3820_s2608_s2183_r7772_r7676
-INPUTFILEARRAY[10]=mc15_13TeV.301524.MadGraphPythia8EvtGen_A14NNPDF23LO_RS_G_hh_bbbb_c20_M2250.merge.AOD.e3820_s2608_s2183_r7772_r7676
-INPUTFILEARRAY[11]=mc15_13TeV.301525.MadGraphPythia8EvtGen_A14NNPDF23LO_RS_G_hh_bbbb_c20_M2500.merge.AOD.e3820_s2608_s2183_r7772_r7676
-INPUTFILEARRAY[12]=mc15_13TeV.301527.MadGraphPythia8EvtGen_A14NNPDF23LO_RS_G_hh_bbbb_c20_M3000.merge.AOD.e3820_s2608_s2183_r7772_r7676
-
-INPUTFILEARRAY[13]=mc15_13TeV.361023.Pythia8EvtGen_A14NNPDF23LO_jetjet_JZ3W.merge.AOD.e3668_s2576_s2132_r7725_r7676
-INPUTFILEARRAY[14]=mc15_13TeV.361024.Pythia8EvtGen_A14NNPDF23LO_jetjet_JZ4W.merge.AOD.e3668_s2576_s2132_r7725_r7676
-INPUTFILEARRAY[15]=mc15_13TeV.361025.Pythia8EvtGen_A14NNPDF23LO_jetjet_JZ5W.merge.AOD.e3668_s2576_s2132_r7725_r7676
-INPUTFILEARRAY[16]=mc15_13TeV.361026.Pythia8EvtGen_A14NNPDF23LO_jetjet_JZ6W.merge.AOD.e3569_s2608_s2183_r7725_r7676
-INPUTFILEARRAY[17]=mc15_13TeV.361027.Pythia8EvtGen_A14NNPDF23LO_jetjet_JZ7W.merge.AOD.e3668_s2608_s2183_r7725_r7676
-INPUTFILEARRAY[18]=mc15_13TeV.361028.Pythia8EvtGen_A14NNPDF23LO_jetjet_JZ8W.merge.AOD.e3569_s2576_s2132_r7772_r7676
-INPUTFILEARRAY[19]=mc15_13TeV.361029.Pythia8EvtGen_A14NNPDF23LO_jetjet_JZ9W.merge.AOD.e3569_s2576_s2132_r7772_r7676
-INPUTFILEARRAY[20]=mc15_13TeV.361030.Pythia8EvtGen_A14NNPDF23LO_jetjet_JZ10W.merge.AOD.e3569_s2576_s2132_r7772_r7676
-
-for i in `seq 0 0`;
+HERE=$(pwd)
+cd WorkArea/run
+for INPUT_DS in $(cat $HERE/scripts/ds-list.txt);
 do
-	INPUT_DS=${INPUTFILEARRAY[$i]}
-	TO_REMOVE_1="mc15_13TeV."
-	TO_REMOVE_2="MadGraphPythia8EvtGen_A14NNPDF23LO_"
-	TO_REMOVE_3="merge.AOD."
-	TO_REMOVE_4="Pythia8EvtGen_A14NNPDF23LO_"
-	STRIPPED_INPUT_DS=`echo $INPUT_DS | sed "s/$TO_REMOVE_1//" | sed "s/$TO_REMOVE_2//" | sed "s/$TO_REMOVE_3//" | sed "s/$TO_REMOVE_4//"`
-	OUTPUT_DS=$PREFIX"."$STRIPPED_INPUT_DS"."$SUFFIX"/"
-	echo $INPUT_DS
-	echo $OUTPUT_DS
+    OUTPUT_DS=$($HERE/scripts/ftag5-grid-name.sh $INPUT_DS)
+	  # echo $INPUT_DS
+	  # echo $OUTPUT_DS
 
-	# go to the run directory
-	cd WorkArea/run
+	  # go to the run directory
 
-	# run the job
-	pathena \
-	--official \
-	--voms atlas:/atlas/phys-exotics/Role=production \
-	--trf \
-	"Reco_tf.py \
+	  # run the job
+	  echo pathena \
+	      --trf \
+	      "Reco_tf.py \
 	--preExec 'from BTagging.BTaggingFlags import BTaggingFlags;BTaggingFlags.CalibrationTag = \"BTagCalibRUN12-08-18\"' \
 	--outputDAODFile pool.root \
 	--inputAODFile %IN \
 	--reductionConf FTAG5" \
-	--nFilesPerJob=1 \
-	--extOutFile DAOD_FTAG5.pool.root \
-	--inDS $INPUT_DS \
-	--outDS $OUTPUT_DS
+	      --nFilesPerJob=1 \
+	      --inDS $INPUT_DS \
+        $OUTPUT_DS
 
-	# go back
-	cd ../..
 done
