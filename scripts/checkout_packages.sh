@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
 
 # checkout packages
-pkgco.py DerivationFrameworkCore
-pkgco.py DerivationFrameworkFlavourTag
+pkgco.py DerivationFrameworkFlavourTag-00-01-55
