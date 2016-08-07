@@ -16,7 +16,7 @@ do
 	  # go to the run directory
 
 	  # run the job
-	  echo pathena \
+	  pathena \
 	      --trf \
 	      "Reco_tf.py \
 	--preExec 'from BTagging.BTaggingFlags import BTaggingFlags;BTaggingFlags.CalibrationTag = \"BTagCalibRUN12-08-18\"' \
