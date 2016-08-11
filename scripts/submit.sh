@@ -7,7 +7,7 @@ fi
 
 HERE=$(pwd)
 cd WorkArea/run
-for INPUT_DS in $(cat $HERE/scripts/ds-list.txt);
+for INPUT_DS in $(cat $HERE/scripts/messed-up-aods.txt);
 do
     OUTPUT_DS=$($HERE/scripts/ftag5-grid-name.sh $INPUT_DS)
 	  # echo $INPUT_DS
