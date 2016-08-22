@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+set -eu
+
 if ! git diff-index --quiet HEAD; then
     echo "ERROR: uncommitted changes in local area, please commit them" >&2
     exit 1

@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+set -eu
+
 # go to the run directory
 cd WorkArea/run
 

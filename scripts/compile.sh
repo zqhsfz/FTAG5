@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+set -eu
+
 # compile everything
 setupWorkArea.py
 cd WorkArea/cmt
