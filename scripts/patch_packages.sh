@@ -2,4 +2,6 @@
 
 set -eu
 
-patch ../Reconstruction/AODFix/python/AODFix_r207.py < disable-jvc.patch
+JVC_PATCH=$TestArea/scripts/disable-jvc.patch
+AODFIX=$TestArea/Reconstruction/AODFix/python/AODFix_r207.py
+patch $AODFIX < $JVC_PATCH
