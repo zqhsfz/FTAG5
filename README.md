@@ -9,6 +9,7 @@ On `lxplus` you can set up with
 
 ```
 git clone git@github.com:atlas-flavor-tagging-algo/FTAG5.git
+git checkout advanced-hbb
 . setup.sh
 ```
 
