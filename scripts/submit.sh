@@ -11,16 +11,25 @@ HERE=$(pwd)
 cd WorkArea/run
 
 TARBALL=workarea.tar
-pathena --trf "Reco_tf.py --outputDAODFile pool.root --inputAODFile %IN \
-	--reductionConf FTAG5" --inDS dummy dummy \
-        --outTarBall=$TARBALL --noSubmit
-
+function cleanup() {
+    if [[ -f $TARBALL ]]; then
+        echo "removing $TARBALL"
+        rm -rf $TARBALL
+    fi
+}
+trap cleanup EXIT
 
 for INPUT_DS in $(cat $HERE/scripts/ds-list-wtz.txt);
 do
     OUTPUT_DS=$($HERE/scripts/ftag5-grid-name.sh $INPUT_DS)
 	  # echo $INPUT_DS
 	  # echo $OUTPUT_DS
+    if [[ ! -f $TARBALL ]]; then
+        pathena --trf "Reco_tf.py --outputDAODFile pool.root \
+          --inputAODFile %IN --reductionConf FTAG5" \
+                --inDS $INPUT_DS $OUTPUT_DS \
+                --outTarBall=$TARBALL --noSubmit
+    fi
 
 	  # go to the run directory
 
