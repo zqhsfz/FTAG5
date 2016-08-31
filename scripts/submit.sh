@@ -9,7 +9,14 @@ fi
 
 HERE=$(pwd)
 cd WorkArea/run
-for INPUT_DS in $(cat $HERE/scripts/ds-list.txt);
+
+TARBALL=workarea.tar
+pathena --trf "Reco_tf.py --outputDAODFile pool.root --inputAODFile %IN \
+	--reductionConf FTAG5" --inDS dummy dummy \
+        --outTarBall=$TARBALL --noSubmit
+
+
+for INPUT_DS in $(cat $HERE/scripts/ds-list-wtz.txt);
 do
     OUTPUT_DS=$($HERE/scripts/ftag5-grid-name.sh $INPUT_DS)
 	  # echo $INPUT_DS
@@ -26,6 +33,7 @@ do
 	--inputAODFile %IN \
 	--reductionConf FTAG5" \
 	      --nFilesPerJob=1 \
+        --inTarBall=$TARBALL \
 	      --inDS $INPUT_DS \
         $OUTPUT_DS
 
