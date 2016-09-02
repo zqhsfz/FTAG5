@@ -1,0 +1,138 @@
+Index: python/HbbCommon.py
+===================================================================
+--- python/HbbCommon.py	(revision 0)
++++ python/HbbCommon.py	(revision 0)
+@@ -0,0 +1,58 @@
++from JetRec.JetRecConf import JetAlgorithm
++
++def buildExclusiveSubjets(JetCollectionName, nsubjet, ToolSvc):
++    from JetSubStructureMomentTools.JetSubStructureMomentToolsConf import SubjetFinderTool
++    from JetSubStructureMomentTools.JetSubStructureMomentToolsConf import SubjetRecorderTool
++
++    SubjetContainerName = "%sExKt%iSubJets" % (JetCollectionName.replace("Jets", ""), nsubjet)
++
++    subjetrecorder = SubjetRecorderTool("subjetrecorder%i_%s" % (nsubjet, JetCollectionName))
++    ToolSvc += subjetrecorder
++
++    subjetlabel = "ExKt%iSubJets" % (nsubjet)
++
++    subjetrecorder.SubjetLabel = subjetlabel
++    subjetrecorder.SubjetContainerName = SubjetContainerName
++
++    from JetTagTools.JetTagToolsConf import Analysis__ExKtbbTagTool
++    ExKtbbTagToolInstance = Analysis__ExKtbbTagTool(
++      name = "ExKtbbTagTool%i_%s" % (nsubjet, JetCollectionName),
++      JetAlgorithm = "Kt",
++      JetRadius = 10.0,
++      PtMin = 5000,
++      ExclusiveNJets = 2,
++      InputJetContainerName = JetCollectionName,   # touch
++      SubjetContainerName = SubjetContainerName,
++      # SubjetFinder = subjetfinder,
++      SubjetRecorder = subjetrecorder,
++      SubjetLabel = subjetlabel,
++      SubjetAlgorithm_BTAG = "AntiKt",
++      SubjetRadius_BTAG = 0.4
++    )
++    ToolSvc += ExKtbbTagToolInstance
++
++    return (ExKtbbTagToolInstance, SubjetContainerName)
++
++
++def addExKt(FTAG5Seq, ToolSvc, ExKtJetCollection__FatJet):
++    ExKtJetCollection__SubJet = []
++    for JetCollectionExKt in ExKtJetCollection__FatJet:
++        # build ExKtbbTagTool instance
++        (ExKtbbTagToolInstance, SubjetContainerName) = buildExclusiveSubjets(JetCollectionExKt, 2, ToolSvc)
++        ExKtJetCollection__SubJet += [SubjetContainerName]
++
++        # build subjet collection through JetRecTool
++        from JetRec.JetRecConf import JetRecTool
++        jetrec = JetRecTool(
++            name = "JetRecTool_ExKtbb_%s" % (JetCollectionExKt),
++            OutputContainer = JetCollectionExKt,
++            InputContainer = JetCollectionExKt,
++            JetModifiers = [ExKtbbTagToolInstance],
++        )
++
++        ToolSvc += jetrec
++        FTAG5Seq += JetAlgorithm(
++            name = "JetAlgorithm_ExKtbb_%s" % (JetCollectionExKt),
++            Tools = [jetrec],
++        )
++    return ExKtJetCollection__SubJet
+
+Property changes on: python/HbbCommon.py
+___________________________________________________________________
+Added: svn:keywords
+   + Date Revision Author HeadURL Id
+
+Index: share/FTAG5.py
+===================================================================
+--- share/FTAG5.py	(revision 770625)
++++ share/FTAG5.py	(working copy)
+@@ -187,62 +187,10 @@
+ #===================================================================
+ 
+ # make exkt subjet finding tool
+-def buildExclusiveSubjets(JetCollectionName, nsubjet, ToolSvc = ToolSvc):
+-    from JetSubStructureMomentTools.JetSubStructureMomentToolsConf import SubjetFinderTool
+-    from JetSubStructureMomentTools.JetSubStructureMomentToolsConf import SubjetRecorderTool
+-
+-    SubjetContainerName = "%sExKt%iSubJets" % (JetCollectionName.replace("Jets", ""), nsubjet)
+-
+-    subjetrecorder = SubjetRecorderTool("subjetrecorder%i_%s" % (nsubjet, JetCollectionName))
+-    ToolSvc += subjetrecorder
+-
+-    subjetlabel = "ExKt%iSubJets" % (nsubjet)
+-
+-    subjetrecorder.SubjetLabel = subjetlabel
+-    subjetrecorder.SubjetContainerName = SubjetContainerName
+-
+-    from JetTagTools.JetTagToolsConf import Analysis__ExKtbbTagTool
+-    ExKtbbTagToolInstance = Analysis__ExKtbbTagTool(
+-      name = "ExKtbbTagTool%i_%s" % (nsubjet, JetCollectionName),
+-      JetAlgorithm = "Kt",
+-      JetRadius = 10.0,
+-      PtMin = 5000,
+-      ExclusiveNJets = 2,
+-      InputJetContainerName = JetCollectionName,   # touch
+-      SubjetContainerName = SubjetContainerName,
+-      # SubjetFinder = subjetfinder,
+-      SubjetRecorder = subjetrecorder,
+-      SubjetLabel = subjetlabel,
+-      SubjetAlgorithm_BTAG = "AntiKt",
+-      SubjetRadius_BTAG = 0.4
+-    )
+-    ToolSvc += ExKtbbTagToolInstance
+-
+-    return (ExKtbbTagToolInstance, SubjetContainerName)
+-
++from DerivationFrameworkFlavourTag.HbbCommon import addExKt
+ ExKtJetCollection__FatJet = ["AntiKt10LCTopoTrimmedPtFrac5SmallR20Jets", "AntiKt10TrackJets"]
+-# ExKtJetCollection__FatJet = ["AntiKt10LCTopoTrimmedPtFrac5SmallR20Jets"]
+-ExKtJetCollection__SubJet = []
+-for JetCollectionExKt in ExKtJetCollection__FatJet:
+-    # build ExKtbbTagTool instance
+-    (ExKtbbTagToolInstance, SubjetContainerName) = buildExclusiveSubjets(JetCollectionExKt, 2)
+-    ExKtJetCollection__SubJet += [SubjetContainerName]
++ExKtJetCollection__SubJet = addExKt(FTAG5Seq, ToolSvc, ExKtJetCollection__FatJet)
+ 
+-    # build subjet collection through JetRecTool
+-    from JetRec.JetRecConf import JetRecTool
+-    jetrec = JetRecTool(
+-                         name = "JetRecTool_ExKtbb_%s" % (JetCollectionExKt),
+-                         OutputContainer = JetCollectionExKt,
+-                         InputContainer = JetCollectionExKt,
+-                         JetModifiers = [ExKtbbTagToolInstance],
+-                       )
+-
+-    ToolSvc += jetrec
+-    FTAG5Seq += JetAlgorithm(
+-                             name = "JetAlgorithm_ExKtbb_%s" % (JetCollectionExKt),
+-                             Tools = [jetrec],
+-                            )
+-
+ #===================================================================
+ # Run b-tagging
+ #===================================================================
