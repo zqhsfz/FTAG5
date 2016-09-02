@@ -7,9 +7,11 @@ if ! git diff-index --quiet HEAD; then
     exit 1
 fi
 
+# go to the run directory
 HERE=$(pwd)
 cd WorkArea/run
 
+# set cleanup function
 TARBALL=workarea.tar
 function cleanup() {
     if [[ -f $TARBALL ]]; then
@@ -19,19 +21,22 @@ function cleanup() {
 }
 trap cleanup EXIT
 
-for INPUT_DS in $(cat $HERE/scripts/ds-list-wtz.txt);
+SCRIPTS=$HERE/scripts
+
+# create tarball
+DUMMY_FOR_TARBALL=$(head -n1 $SCRIPTS/ds-list.txt)
+DUMMY_OUTPUT_DS=$($SCRIPTS/ftag5-grid-name.sh $DUMMY_FOR_TARBALL)
+if [[ ! -f $TARBALL ]]; then
+    pathena --trf "Reco_tf.py --outputDAODFile pool.root \
+          --inputAODFile %IN --reductionConf FTAG5" \
+            --inDS $DUMMY_FOR_TARBALL $DUMMY_OUTPUT_DS \
+            --outTarBall=$TARBALL --noSubmit
+fi
+
+# submit jobs
+for INPUT_DS in $(cat $SCRIPTS/ds-list-wtz.txt $SCRIPTS/ds-list.txt);
 do
     OUTPUT_DS=$($HERE/scripts/ftag5-grid-name.sh $INPUT_DS)
-	  # echo $INPUT_DS
-	  # echo $OUTPUT_DS
-    if [[ ! -f $TARBALL ]]; then
-        pathena --trf "Reco_tf.py --outputDAODFile pool.root \
-          --inputAODFile %IN --reductionConf FTAG5" \
-                --inDS $INPUT_DS $OUTPUT_DS \
-                --outTarBall=$TARBALL --noSubmit
-    fi
-
-	  # go to the run directory
 
 	  # run the job
 	  pathena \
@@ -44,6 +49,6 @@ do
 	      --nFilesPerJob=1 \
         --inTarBall=$TARBALL \
 	      --inDS $INPUT_DS \
-        $OUTPUT_DS
+        $OUTPUT_DS &
 
 done
