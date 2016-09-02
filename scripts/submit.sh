@@ -49,6 +49,6 @@ do
 	      --nFilesPerJob=1 \
         --inTarBall=$TARBALL \
 	      --inDS $INPUT_DS \
-        $OUTPUT_DS
+        $OUTPUT_DS || true
 
 done
