@@ -1,0 +1,26 @@
+--- FTAG5-old.py	2016-09-02 18:08:12.000000001 +0200
++++ FTAG5.py	2016-09-02 18:23:01.000000001 +0200
+@@ -187,9 +187,11 @@
+ #===================================================================
+ 
+ # make exkt subjet finding tool
+-from DerivationFrameworkFlavourTag.HbbCommon import addExKt
+-ExKtJetCollection__FatJet = ["AntiKt10LCTopoTrimmedPtFrac5SmallR20Jets", "AntiKt10TrackJets"]
+-ExKtJetCollection__SubJet = addExKt(FTAG5Seq, ToolSvc, ExKtJetCollection__FatJet)
++# from DerivationFrameworkFlavourTag.HbbCommon import addExKt
++# ExKtJetCollection__FatJet = ["AntiKt10LCTopoTrimmedPtFrac5SmallR20Jets", "AntiKt10TrackJets"]
++# ExKtJetCollection__SubJet = addExKt(FTAG5Seq, ToolSvc, ExKtJetCollection__FatJet)
++ExKtJetCollection__FatJet = []
++ExKtJetCollection__SubJet = []
+ 
+ #===================================================================
+ # Run b-tagging
+@@ -225,7 +227,7 @@
+ # must re-tag AntiKt4LCTopoJets and AntiKt4PV0TrackJets to make JetFitterNN work with corresponding VR jets (nikola: why?)
+ # also, re-tag R=0.2 track jets
+ FlavorTagInit( myTaggers = defaultTaggers, JetCollections = ["AntiKt4PV0TrackJets", "AntiKtVR01Rmax4Rmin0TrackJets", "AntiKtVR10Rmax4Rmin0TrackJets", "AntiKtVR20Rmax4Rmin0TrackJets", "AntiKtVR30Rmax4Rmin0TrackJets", "AntiKtVR40Rmax4Rmin0TrackJets", "AntiKtVR50Rmax4Rmin0TrackJets", "AntiKtVR60Rmax4Rmin0TrackJets", "AntiKtVR70Rmax4Rmin0TrackJets", "AntiKtVR80Rmax4Rmin0TrackJets", "AntiKtVR90Rmax4Rmin0TrackJets", "AntiKt2PV0TrackJets"] + ExKtJetCollection__SubJet, Sequencer = FTAG5Seq )
+-FlavorTagInit( myTaggers = defaultTaggers + specialTaggers, JetCollections = ExKtJetCollection__FatJet, Sequencer = FTAG5Seq )
++# FlavorTagInit( myTaggers = defaultTaggers + specialTaggers, JetCollections = ExKtJetCollection__FatJet, Sequencer = FTAG5Seq )
+ 
+ #====================================================================
+ # ATTEMPT TO FIX TRUTH LABELLING BUG
