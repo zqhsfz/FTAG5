@@ -30,7 +30,7 @@ if [[ ! -f $TARBALL ]]; then
     pathena --trf "Reco_tf.py --outputDAODFile pool.root \
           --inputAODFile %IN --reductionConf FTAG5" \
             --inDS $DUMMY_FOR_TARBALL $DUMMY_OUTPUT_DS \
-            --outTarBall=$TARBALL --noSubmit -v
+            --outTarBall=$TARBALL --noSubmit
 fi
 
 # submit jobs
