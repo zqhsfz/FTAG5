@@ -1,13 +1,13 @@
-Index: FTAG5.py
+Index: share/FTAG5.py
 ===================================================================
---- FTAG5.py	(revision 772334)
-+++ FTAG5.py	(working copy)
+--- share/FTAG5.py	(revision 772334)
++++ share/FTAG5.py	(working copy)
 @@ -259,7 +259,7 @@
  
  else:
      triggers = []
 -    expression = offlineExpression
-+    expression = ''
++    expression = 'true'
  
  from DerivationFrameworkTools.DerivationFrameworkToolsConf import DerivationFramework__xAODStringSkimmingTool
  FTAG5SkimmingTool = DerivationFramework__xAODStringSkimmingTool(name = "FTAG5OfflineSkimmingTool", expression = expression)
