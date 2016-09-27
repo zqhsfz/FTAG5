@@ -34,7 +34,7 @@ if [[ ! -f $TARBALL ]]; then
 fi
 
 # submit jobs
-for INPUT_DS in $(cat $SCRIPTS/ds-list-wtz.txt $SCRIPTS/ds-list.txt);
+for INPUT_DS in $(cat $SCRIPTS/ds-resub.txt);
 do
     OUTPUT_DS=$($HERE/scripts/ftag5-grid-name.sh $INPUT_DS)
 
