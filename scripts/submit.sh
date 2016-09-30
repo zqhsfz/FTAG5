@@ -24,7 +24,7 @@ trap cleanup EXIT
 SCRIPTS=$HERE/scripts
 
 # create tarball
-DUMMY_FOR_TARBALL=$(head -n1 $SCRIPTS/ds-list.txt)
+DUMMY_FOR_TARBALL=$(head -n1 $SCRIPTS/ds-list-hbb.txt)
 DUMMY_OUTPUT_DS=$($SCRIPTS/ftag5-grid-name.sh $DUMMY_FOR_TARBALL)
 if [[ ! -f $TARBALL ]]; then
     pathena --trf "Reco_tf.py --outputDAODFile pool.root \
@@ -34,7 +34,7 @@ if [[ ! -f $TARBALL ]]; then
 fi
 
 # submit jobs
-for INPUT_DS in $(cat $SCRIPTS/ds-resub.txt);
+for INPUT_DS in $(cat $SCRIPTS/ds-list-{wtz,hbb,jzw}.txt);
 do
     OUTPUT_DS=$($HERE/scripts/ftag5-grid-name.sh $INPUT_DS)
 
