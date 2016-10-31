@@ -34,7 +34,10 @@ if [[ ! -f $TARBALL ]]; then
 fi
 
 # submit jobs
-for INPUT_DS in $(cat $SCRIPTS/ds-list-{ttbar,wtz,hbb,jzw}.txt);
+DS_LISTS=$SCRIPTS/ds-list-{ttbar,wtz,hbb,jzw,nikola}.txt
+DATASETS=$(cat $FILES | sort -u)
+echo "Submitting over $(echo $DATASETS | wc) files"
+for INPUT_DS in $DATASETS
 do
     OUTPUT_DS=$($HERE/scripts/ftag5-grid-name.sh $INPUT_DS)
 
