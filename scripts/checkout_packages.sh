@@ -3,7 +3,7 @@
 set -eu
 
 pkgco.py ParticleJetTools-00-03-33-08
-pkgco.py DerivationFrameworkFlavourTag-00-01-68
+pkgco.py DerivationFrameworkFlavourTag-00-01-82
 pkgco.py JetSubStructureUtils-00-02-22
 # cmt co -r MVAUtils-00-00-04 Reconstruction/MVAUtils
 
