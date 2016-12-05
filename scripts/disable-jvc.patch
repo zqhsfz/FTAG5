@@ -1,8 +1,8 @@
-Index: python/AODFix_r207.py
+Index: AODFix_r207.py
 ===================================================================
---- python/AODFix_r207.py	(revision 769366)
-+++ python/AODFix_r207.py	(working copy)
-@@ -215,7 +215,7 @@
+--- AODFix_r207.py	(revision 787971)
++++ AODFix_r207.py	(working copy)
+@@ -756,7 +756,7 @@
                                                         TaggerList = ['IP3D','MV2c00','MV2c10',
                                                                       'MV2c20','MV2c100','MV2m',
                                                                       'MV2c10hp','MV2cl100',

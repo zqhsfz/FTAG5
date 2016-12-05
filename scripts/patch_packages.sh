@@ -10,7 +10,7 @@ DISABLE_SKIM_PATCH=$TestArea/scripts/disable-skim.patch
 
 ## forward sequence
 patch -N $AODFIX < $JVC_PATCH
-patch -N $FTAG5 < $DISABLE_SKIM_PATCH
+# patch -N $FTAG5 < $DISABLE_SKIM_PATCH --> why disable skimming?
 
 ## reverse sequence
 # patch -R $FTAG5 < $DISABLE_SKIM_PATCH
