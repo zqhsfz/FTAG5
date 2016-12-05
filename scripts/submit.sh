@@ -34,8 +34,8 @@ if [[ ! -f $TARBALL ]]; then
 fi
 
 # submit jobs
-DS_LISTS=$SCRIPTS/ds-list-{ttbar,wtz,hbb,jzw,nikola}.txt
-DATASETS=$(cat $FILES | sort -u)
+DS_LISTS=$(echo $SCRIPTS/ds-list-{ttbar,wtz,hbb,jzw,nikola}.txt)
+DATASETS=$(cat $DS_LISTS | sort -u)
 echo "Submitting over $(echo $DATASETS | wc) files"
 for INPUT_DS in $DATASETS
 do
