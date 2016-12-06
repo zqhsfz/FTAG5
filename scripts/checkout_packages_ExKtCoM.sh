@@ -3,7 +3,7 @@
 # set -eu
 
 pkgco.py ParticleJetTools-00-03-33-08
-pkgco.py DerivationFrameworkFlavourTag-00-01-84
+pkgco.py DerivationFrameworkFlavourTag-00-01-85
 pkgco.py DerivationFrameworkJetEtMiss-00-03-56
 
 pkgco.py BTagging-00-07-63-05
