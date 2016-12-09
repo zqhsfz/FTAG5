@@ -45,7 +45,7 @@ do
 	  pathena \
 	      --trf \
 	      "Reco_tf.py \
-	--preExec 'from BTagging.BTaggingFlags import BTaggingFlags;BTaggingFlags.CalibrationTag = \"BTagCalibRUN12-08-29\";BTaggingFlags.ForceMV2CalibrationAlias=False;' \
+	--preExec 'from BTagging.BTaggingFlags import BTaggingFlags;BTaggingFlags.CalibrationTag = \"BTagCalibRUN12-08-30\";BTaggingFlags.ForceMV2CalibrationAlias=False;' \
 	--outputDAODFile pool.root \
 	--inputAODFile %IN \
 	--reductionConf FTAG5" \
