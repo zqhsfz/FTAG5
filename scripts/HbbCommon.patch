@@ -1,0 +1,57 @@
+Index: PhysicsAnalysis/DerivationFramework/DerivationFrameworkFlavourTag/python/HbbCommon.py
+===================================================================
+--- PhysicsAnalysis/DerivationFramework/DerivationFrameworkFlavourTag/python/HbbCommon.py	(revision 789391)
++++ PhysicsAnalysis/DerivationFramework/DerivationFrameworkFlavourTag/python/HbbCommon.py	(working copy)
+@@ -35,6 +35,9 @@
+ #      algj = "cambridge" # or CamKt if "cambridge" doesn't work
+       algj = "FastJetPlugin" # for EECambridge plugin  #and EEKt or ee_kt
+ 
++    # for SoftDrop
++    doSoftDrop = (subjet_mode == "SD")
++
+     subjetrecorder.SubjetLabel = subjetlabel
+     subjetrecorder.SubjetContainerName = SubjetContainerName
+ 
+@@ -52,6 +55,7 @@
+       PtMin = 1000,
+       ExclusiveNJets = 2,
+       doTrack = doTrackSubJet,
++      doSoftDrop = doSoftDrop,
+       InputJetContainerName = JetCollectionName,
+       SubjetContainerName = SubjetContainerName,
+       SubjetRecorder = subjetrecorder,
+@@ -117,6 +121,34 @@
+                                 )
+     return ExCoMJetCollection__SubJet
+ 
++#===================================================================
++# Build SoftDrop Subjets
++#===================================================================
++def addExSD(FTAG5Seq, ToolSvc, ExKtJetCollection__FatJet, doTrackSubJet):
++    ExSDJetCollection__SubJet = []
++    for JetCollectionExSD in ExKtJetCollection__FatJet:
++        # build ExSDbbTagTool instance
++        (ExSDbbTagToolInstance, SubjetContainerName) = buildExclusiveSubjets(ToolSvc, JetCollectionExSD, "SD", 2, doTrackSubJet)
++        ExSDJetCollection__SubJet += [SubjetContainerName]
++
++        # build subjet collection through JetRecTool
++        from JetRec.JetRecConf import JetRecTool
++        jetrec = JetRecTool(
++                             name = "JetRecTool_ExSDbb_%s" % (JetCollectionExSD),
++                             OutputContainer = JetCollectionExSD,
++                             InputContainer = JetCollectionExSD,
++                             JetModifiers = [ExSDbbTagToolInstance],
++                           )
++
++        ToolSvc += jetrec
++        FTAG5Seq += JetAlgorithm(
++                                 name = "JetAlgorithm_ExSDbb_%s" % (JetCollectionExSD),
++                                 Tools = [jetrec],
++                                )
++    return ExSDJetCollection__SubJet
++
++
++
+ ##################################################################
+ # Build variable-R subjets, recluster AntiKt10LCTopojet with ghost VR and copy ghost link to AntiKt10LCTopo 
+ ##################################################################

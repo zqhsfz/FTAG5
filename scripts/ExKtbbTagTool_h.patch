@@ -1,0 +1,12 @@
+Index: PhysicsAnalysis/JetTagging/JetTagTools/JetTagTools/ExKtbbTagTool.h
+===================================================================
+--- PhysicsAnalysis/JetTagging/JetTagTools/JetTagTools/ExKtbbTagTool.h	(revision 789391)
++++ PhysicsAnalysis/JetTagging/JetTagTools/JetTagTools/ExKtbbTagTool.h	(working copy)
+@@ -47,6 +47,7 @@
+     float       m_PtMin;
+     int         m_ExclusiveNJets;
+     bool        m_doTrack;
++    bool        m_doSoftDrop;
+ 
+     // related to subjet recording
+     std::string m_InputJetContainerName;             // Mainly used to build correct link from subjet to parent jet

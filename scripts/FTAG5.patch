@@ -1,0 +1,33 @@
+Index: PhysicsAnalysis/DerivationFramework/DerivationFrameworkFlavourTag/share/FTAG5.py
+===================================================================
+--- PhysicsAnalysis/DerivationFramework/DerivationFrameworkFlavourTag/share/FTAG5.py	(revision 789594)
++++ PhysicsAnalysis/DerivationFramework/DerivationFrameworkFlavourTag/share/FTAG5.py	(working copy)
+@@ -161,6 +161,7 @@
+ 
+ for key, config in ExKtJetCollection__FatJetConfigs.items():
+ 	ExKtJetCollection__SubJet += addExKt(FTAG5Seq, ToolSvc, [key], **config)
++	ExKtJetCollection__SubJet += addExSD(FTAG5Seq, ToolSvc, [key], **config)
+ 	ExCoMJetCollection__SubJet += addExCoM(FTAG5Seq, ToolSvc, [key], **config)
+ 
+ for key, config in ExKtJetCollection__FatJetAltAssocConfigs.items():
+@@ -193,9 +194,9 @@
+ 	OldLinkNameList += [vr_jet_ghost_label]
+ 	NewLinkNameList += [vr_jet_ghost_label]
+ 
+-# ExKt / CoM
+-OldLinkNameList += ["ExKt2SubJets", "ExCoM2SubJets"]
+-NewLinkNameList += ["ExKt2TrackSubJets", "ExCoM2TrackSubJets"]
++# ExKt / CoM / ExSD
++OldLinkNameList += ["ExKt2SubJets", "ExSD2SubJets", "ExCoM2SubJets"]
++NewLinkNameList += ["ExKt2TrackSubJets", "ExSD2TrackSubJets", "ExCoM2TrackSubJets"]
+ 
+ jetassoctool = getJetExternalAssocTool('AntiKt10LCTopo', 'NewAntiKt10LCTopo', MomentPrefix='', ListOfOldLinkNames=OldLinkNameList, ListOfNewLinkNames=NewLinkNameList)
+ applyJetAugmentation('AntiKt10LCTopo', 'AugmentationAlg_LinkTransfer', FTAG5Seq, jetassoctool)
+@@ -307,6 +308,7 @@
+ 
+ else:
+     triggers = []
++    # expression = 'true'
+     expression = offlineExpression
+ 
+ from DerivationFrameworkTools.DerivationFrameworkToolsConf import DerivationFramework__xAODStringSkimmingTool

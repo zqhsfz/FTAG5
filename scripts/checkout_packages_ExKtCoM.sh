@@ -11,3 +11,4 @@ pkgco.py JetTagTools-01-00-96-04
 
 pkgco.py AODFix-00-03-29
 
+pkgco.py JetSubStructureUtils

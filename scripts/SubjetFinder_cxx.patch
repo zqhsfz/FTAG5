@@ -1,0 +1,108 @@
+Index: Reconstruction/Jet/JetSubStructureUtils/Root/SubjetFinder.cxx
+===================================================================
+--- Reconstruction/Jet/JetSubStructureUtils/Root/SubjetFinder.cxx	(revision 789391)
++++ Reconstruction/Jet/JetSubStructureUtils/Root/SubjetFinder.cxx	(working copy)
+@@ -8,8 +8,12 @@
+ using namespace std;
+ using namespace JetSubStructureUtils;
+ 
+-SubjetFinder::SubjetFinder(fastjet::JetAlgorithm fj_jetalg, float jet_radius, float pt_min, int exclusive_njets) :
+-  m_fj_jetalg(fj_jetalg), m_jetrad(jet_radius), m_ptmin(pt_min), m_exclusivenjets(exclusive_njets)
++SubjetFinder::SubjetFinder(fastjet::JetAlgorithm fj_jetalg, float jet_radius, float pt_min, int exclusive_njets, bool doSoftDrop) :
++  m_fj_jetalg(fj_jetalg), 
++  m_jetrad(jet_radius), 
++  m_ptmin(pt_min), 
++  m_exclusivenjets(exclusive_njets),
++  m_doSoftDrop(doSoftDrop)
+ {
+ }
+ 
+@@ -22,35 +26,67 @@
+     return subjets;
+   }
+ 
++  if(m_doSoftDrop){
++    // https://arxiv.org/pdf/1111.6097.pdf (page 47)
+ 
+-  fastjet::ClusterSequence *clust_seq = NULL;
++    // need to cluster anyway to obtain a valid cluster sequence
++    // Use AKT intentially, so that the CA check inside Recluster would always fail, hence enforcing reclustering with the algorithm defined by user
++    SubjetFinder subjetfinder_interal(fastjet::antikt_algorithm, fastjet::JetDefinition::max_allowable_R, 0.);
++    std::vector<fastjet::PseudoJet> subjets_internal = subjetfinder_interal.result(jet);
+ 
+-  if (m_fj_jetalg==fastjet::ee_kt_algorithm) {
+-    fastjet::JetDefinition jet_def = fastjet::JetDefinition(fastjet::ee_kt_algorithm);
+-    clust_seq =  new fastjet::ClusterSequence(constit_pseudojets, jet_def);
+-  }else if (m_fj_jetalg==fastjet::plugin_algorithm) {
+-    fastjet::JetDefinition jet_def = fastjet::JetDefinition(new fastjet::EECambridgePlugin(m_jetrad));
+-    clust_seq =  new fastjet::ClusterSequence(constit_pseudojets, jet_def);
+-  }else{
+-    fastjet::JetDefinition jet_def = fastjet::JetDefinition(m_fj_jetalg, m_jetrad, fastjet::E_scheme, fastjet::Best);
+-    clust_seq =  new fastjet::ClusterSequence(constit_pseudojets, jet_def);
+-  }
++    if(subjets_internal.size() != 1){
++      std::cout << "ERROR! Should get only one jet!" << std::endl;
++      return subjets;
++    }
+ 
++    fastjet::PseudoJet jet_internal = subjets_internal[0];
++    if(jet_internal.constituents().size() != constit_pseudojets.size()){
++      std::cout << "ERROR! Should get exactly same number of constituents!" << std::endl;
++      return subjets;
++    }
+ 
++    // just a hard-code example
++    fastjet::contrib::SoftDrop tool_SoftDrop(2.0, 0.1);
++    fastjet::PseudoJet jet_after_sd = tool_SoftDrop.result(jet_internal);
++    subjets = jet_after_sd.pieces();
++    if(subjets.size() != 2){
++      std::cout << "WARNING! Not returning 2 subjets from MassDrop! Getting " << subjets.size() << " instead." << std::endl
++                << "         Number of constituents: " << jet.constituents().size() << std::endl;
++    }
+ 
+-  if(m_exclusivenjets < 0) { // Inclusive
+-    subjets = fastjet::sorted_by_pt(clust_seq->inclusive_jets(m_ptmin));
++    subjets = fastjet::sorted_by_pt(subjets);
++
++    // skip the filtering
+   }
+-  else {
+-    subjets = fastjet::sorted_by_pt(clust_seq->exclusive_jets_up_to(m_exclusivenjets));
+-  }
++  else{
++    // normal jet clustering
++    fastjet::ClusterSequence *clust_seq = NULL;
+ 
+-  if(subjets.size() == 0) {
+-    delete clust_seq;
++    if (m_fj_jetalg==fastjet::ee_kt_algorithm) {
++      fastjet::JetDefinition jet_def = fastjet::JetDefinition(fastjet::ee_kt_algorithm);
++      clust_seq =  new fastjet::ClusterSequence(constit_pseudojets, jet_def);
++    }else if (m_fj_jetalg==fastjet::plugin_algorithm) {
++      fastjet::JetDefinition jet_def = fastjet::JetDefinition(new fastjet::EECambridgePlugin(m_jetrad));
++      clust_seq =  new fastjet::ClusterSequence(constit_pseudojets, jet_def);
++    }else{
++      fastjet::JetDefinition jet_def = fastjet::JetDefinition(m_fj_jetalg, m_jetrad, fastjet::E_scheme, fastjet::Best);
++      clust_seq =  new fastjet::ClusterSequence(constit_pseudojets, jet_def);
++    }
++
++    if(m_exclusivenjets < 0) { // Inclusive
++      subjets = fastjet::sorted_by_pt(clust_seq->inclusive_jets(m_ptmin));
++    }
++    else {
++      subjets = fastjet::sorted_by_pt(clust_seq->exclusive_jets_up_to(m_exclusivenjets));
++    }
++
++    if(subjets.size() == 0) {
++      delete clust_seq;
++    }
++    else {
++      clust_seq->delete_self_when_unused();
++    }
+   }
+-  else {
+-    clust_seq->delete_self_when_unused();
+-  }
+ 
+   return subjets;
+ }

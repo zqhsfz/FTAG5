@@ -1,0 +1,29 @@
+Index: Reconstruction/Jet/JetSubStructureUtils/JetSubStructureUtils/SubjetFinder.h
+===================================================================
+--- Reconstruction/Jet/JetSubStructureUtils/JetSubStructureUtils/SubjetFinder.h	(revision 789391)
++++ Reconstruction/Jet/JetSubStructureUtils/JetSubStructureUtils/SubjetFinder.h	(working copy)
+@@ -5,10 +5,12 @@
+ #include <vector>
+ #include "fastjet/JetDefinition.hh"
+ 
++#include "fastjet/contrib/SoftDrop.hh"
++
+ namespace JetSubStructureUtils {
+   class SubjetFinder : public SubstructureCalculator<std::vector<fastjet::PseudoJet> > { 
+     public:
+-      SubjetFinder(fastjet::JetAlgorithm fj_jetalg = fastjet::kt_algorithm, float jet_radius = 0.3, float pt_min = 5000, int exclusive_njets = -1);
++      SubjetFinder(fastjet::JetAlgorithm fj_jetalg = fastjet::kt_algorithm, float jet_radius = 0.3, float pt_min = 5000, int exclusive_njets = -1, bool doSoftDrop = false);
+ 
+       using SubstructureCalculator::result;
+       virtual std::vector<fastjet::PseudoJet> result(const fastjet::PseudoJet &jet) const;
+@@ -17,7 +19,9 @@
+       fastjet::JetAlgorithm m_fj_jetalg;
+       float m_jetrad;
+       float m_ptmin;
+-      int m_exclusivenjets; 
++      int   m_exclusivenjets; 
++
++      bool  m_doSoftDrop;
+   };
+ }
+ 
